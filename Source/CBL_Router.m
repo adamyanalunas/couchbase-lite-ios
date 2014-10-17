@@ -611,6 +611,7 @@ static NSArray* splitPath( NSURL* url ) {
 
 - (void) stopNow {
     _running = NO;
+    [self stopHeartbeat];
     self.onResponseReady = nil;
     self.onDataAvailable = nil;
     self.onFinished = nil;

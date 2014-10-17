@@ -37,6 +37,7 @@
 #import "CollectionUtils.h"
 #import "Test.h"
 
+#define kDefaultHeartbeat 2500.0
 
 @implementation CBL_Router (Handlers)
 
@@ -619,9 +620,10 @@
                                                      name: CBL_DatabaseChangesNotification
                                                    object: db];
         
-        NSTimeInterval heartbeat = [self intQuery: @"heartbeat" defaultValue: 0] / 1000;
-        if (heartbeat > 0)
-            [self startHeartbeat: heartbeat];
+        NSTimeInterval heartbeat = [self intQuery: @"heartbeat" defaultValue: kDefaultHeartbeat];
+        if (heartbeat <= 0)
+            heartbeat = kDefaultHeartbeat;
+        [self startHeartbeat: heartbeat/1000.0];
         
         // Don't close connection; more data to come
         return 0;

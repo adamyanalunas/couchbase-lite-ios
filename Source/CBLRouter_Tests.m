@@ -603,6 +603,19 @@ TestCase(CBL_Router_ContinuousChanges_Heartbeat) {
 }
 
 
+TestCase(CBL_Router_Changes_BadHeartbeatParams) {
+    CBLManager* server = createDBManager();
+    Send(server, @"PUT", @"/db", kCBLStatusCreated, nil);
+    Send(server, @"GET", @"/db/_changes?feed=continuous&heartbeat=foo", kCBLStatusBadRequest, nil);
+    Send(server, @"GET", @"/db/_changes?feed=continuous&heartbeat=-1", kCBLStatusBadRequest, nil);
+    Send(server, @"GET", @"/db/_changes?feed=continuous&heartbeat=-0", kCBLStatusBadRequest, nil);
+    Send(server, @"GET", @"/db/_changes?feed=longpoll&heartbeat=foo", kCBLStatusBadRequest, nil);
+    Send(server, @"GET", @"/db/_changes?feed=longpoll&heartbeat=-1", kCBLStatusBadRequest, nil);
+    Send(server, @"GET", @"/db/_changes?feed=longpoll&heartbeat=-0", kCBLStatusBadRequest, nil);
+    [server close];
+}
+
+
 #pragma mark - ATTACHMENTS:
 
 
